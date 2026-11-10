@@ -14,7 +14,7 @@ O cenário escolhido é **processamento assíncrono e controle de concorrência 
 > *"Decidi redesenhar a arquitetura desacoplando a ingestão do processamento:*
 > 1. ***Mensageria e Filas:*** *Implementei uma fila de mensagens com **BullMQ sobre Redis**. Quando o usuário solicita uma coleta, a API apenas valida o payload, empilha um job com status `pending` e retorna imediatamente um `jobId` com HTTP 202 (Accepted). A latência do endpoint caiu para menos de 50ms.*
 > 2. ***Workers Especializados:*** *Isolei os scripts de automação em um serviço worker separado em Python, rodando em containers Docker dedicados. Esse worker consome a fila respeitando limites estritos de concorrência (concurrency limit de 3 instâncias por nó).*
-> 3. ***Resiliência e Retries:*** *Configurei estratégias de exponential backoff para requisições que tomavam rate limit ou falhas transitórias de rede, além de uma Dead Letter Queue (DLQ) para inspecionar jobs que falhassem após 3 tentativas.*
+> 3. ***Resiliência e Retries:*** *Configurei estratégias de exponential backoff para requisições que tomavam rate limit, ou seja fazia tentativas automaticas em intervalos de tempo quando servidor nao respondia*
 > 4. ***Persistência e Notificação:*** *Ao concluir, o worker grava o resultado final no PostgreSQL e emite um evento via WebSocket/Webhook para notificar o cliente final."*
 >
 >
