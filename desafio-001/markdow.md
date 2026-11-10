@@ -9,7 +9,7 @@ O cenário escolhido é **processamento assíncrono e controle de concorrência 
 > **[Situação]**
 > *"Em um projeto recente, tínhamos um serviço que precisava coletar e processar dados estruturados de fontes externas sob demanda. Inicialmente, a própria API em Node.js disparava scripts de automação em segundo plano usando threads/processos filhos para cada requisição que chegava via endpoint."*
 > **[Tarefa / O Gargalo]**
-> *"Com o aumento simultâneo de requisições, o consumo de CPU e memória do container da API explodiu. O Puppeteer/Playwright consumia recursos pesados do nó, erro de conexao 502). O desafio era isolar totalmente esse processamento pesado da API pública, garantir tolerância a falhas e controlar a taxa de execução para não sofrer bloqueios por rate limit das fontes."*
+> *"Com o aumento simultâneo de requisições, o consumo de CPU e memória do container da API explodiu. O Puppeteer/Playwright consumia recursos pesados do nó, erro de conexao 502). O desafio era isolar totalmente esse processamento pesado da APIem node, para evitar o erro de conexao 502 "*
 > **[Ação / Solução Técnica]**
 > *"Decidi redesenhar a arquitetura desacoplando a ingestão do processamento:*
 > 1. ***Mensageria e Filas:*** *Implementei uma fila de mensagens com **BullMQ sobre Redis**. Quando o usuário solicita uma coleta, a API apenas valida o payload, empilha um job com status `pending` e retorna imediatamente um `jobId` com HTTP 202 (Accepted). A latência do endpoint caiu para menos de 50ms.*
